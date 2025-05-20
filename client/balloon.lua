@@ -346,8 +346,13 @@ Citizen.CreateThread(function()
         Citizen.Wait(0) -- Check every frame
         if playerRole and playerRole:find("passenger") then
             if IsControlJustPressed(0, 0x0522B243) then -- F key for passengers
-                Debug:Log(3, "Passenger exit key (F) pressed.")
-                DetachPlayerFromBalloon()
+                if currentBalloonEntity and IsEntityInAir(currentBalloonEntity) then
+                    Debug:Log(2, "Exit blocked: Balloon is airborne.")
+                    TriggerEvent("vorp:Tip", "You can't jump out while the balloon is in flight!", 5000)
+                else
+                    Debug:Log(3, "Passenger exit key (F) pressed.")
+                    DetachPlayerFromBalloon()
+                end
             end
         -- Captain exit is handled by game's default vehicle exit (e.g., X or holding F)
         -- and detected by the captain state monitoring thread.
